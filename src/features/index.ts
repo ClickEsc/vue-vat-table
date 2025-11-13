@@ -1,0 +1,1 @@
+export { default as VatTable } from './VatTable/VatTable.vue';

@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import { NConfigProvider, type GlobalThemeOverrides } from 'naive-ui';
 
+const themeOverrides: GlobalThemeOverrides = {
+  common: {
+    primaryColor: '#FF8C00'
+  }
+}
+import { VatTable } from '../features';
 </script>
 
 <template>
-  <div>
-    Таблица
-  </div>
+  <n-config-provider :theme-overrides="themeOverrides">
+    <VatTable />
+  </n-config-provider>
 </template>
-
-<style scoped>
-
-</style>
