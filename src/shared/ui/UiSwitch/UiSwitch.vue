@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -15,6 +15,10 @@ const props = withDefaults(
 const isActive = ref(false);
 const isDisabled = ref(false);
 
+const toggleActive = () => {
+  isActive.value = !isActive.value;
+}
+
 watch(
   () => props.isActive,
   (newVal, oldVal) => {
@@ -23,6 +27,7 @@ watch(
     }
   },
 );
+
 watch(
   () => props.isDisabled,
   (newVal, oldVal) => {
@@ -31,11 +36,21 @@ watch(
     }
   },
 );
+
+onMounted(() => {
+  if (props.isActive) {
+    isActive.value = props.isActive;
+  }
+  if (props.isDisabled) {
+    isDisabled.value = props.isDisabled;
+  }
+})
 </script>
 
 <template>
   <n-switch
     v-model:value="isActive"
     :disabled="isDisabled"
+    @on-update:value="toggleActive"
   />
 </template>

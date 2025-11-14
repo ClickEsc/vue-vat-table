@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue';
-import { UiDataTable, UiSwitch } from '../../shared/ui';
+import { UiDataTable, UiSwitch, UiDatePicker } from '../../shared/ui';
+import { convertUnixToDate } from '../../shared/utils';
 
 const MOCK_NAMES = [
   'Корректор канцелярский / корректор ленточный, 5 мм*30 м, Комплект 5 шт.',
@@ -17,16 +18,26 @@ const MOCK_NAMES = [
   'Рюкзак Staff Strike универсальный, 3 кармана, черно-салатовый, 45х27х12 см'
 ];
 
-const MOCK_DATA = MOCK_NAMES.map((name, index) => ({
+const MOCK_DATA: {
+  key: number,
+  steName: string | null | undefined,
+  isActual: boolean
+  priceEndDate: string | null | undefined,
+  priceNotNds: string | null | undefined,
+  nds: string | null | undefined,
+  price: string | null | undefined,
+  fillEndDate: string | null | undefined,
+}[] = MOCK_NAMES.map((name, index) => ({
   key: index,
   steName: name,
   isActual: true,
-  priceEndDate: null,
+  priceEndDate: '14.11.2025',
   priceNotNds: null,
   nds: null,
   price: null,
-  fillEndDate: null
-}));
+  fillEndDate: '21.03.2023'
+}
+));
 
 const data = ref(MOCK_DATA);
 
@@ -45,9 +56,9 @@ const COLUMNS = [
     title: "В наличии",
     render(row: any, index: number) {
       return h(UiSwitch, {
-        value: row.name,
+        isActive: row.isActual,
         onUpdateValue(v: any) {
-          if (data?.value?.[index]?.isActual) {
+          if (data?.value?.[index]?.hasOwnProperty('isActual')) {
             data.value[index].isActual = v
           }
           setDataToConsole(row);
@@ -58,6 +69,17 @@ const COLUMNS = [
   {
     key: "priceEndDate",
     title: "Срок действия предоставленных сведений",
+    render(row: any, index: number) {
+      return h(UiDatePicker, {
+        value: row.priceEndDate,
+        onUpdateValue(v: any) {
+          if (data?.value?.[index]?.hasOwnProperty('priceEndDate')) {
+            data.value[index].priceEndDate = convertUnixToDate(v);
+          }
+          setDataToConsole(row);
+        }
+      })
+    }
   },
   {
     key: "priceNotNds",
@@ -74,6 +96,17 @@ const COLUMNS = [
   {
     key: "fillEndDate",
     title: "Срок заполнения",
+    render(row: any, index: number) {
+      return h(UiDatePicker, {
+        value: row.fillEndDate,
+        onUpdateValue(v: any) {
+          if (data?.value?.[index]?.hasOwnProperty('fillEndDate')) {
+            data.value[index].fillEndDate = convertUnixToDate(v);
+          }
+          setDataToConsole(row);
+        }
+      })
+    }
   },
 ];
 
