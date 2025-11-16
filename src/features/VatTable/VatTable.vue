@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, h, ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
 import { UiDataTable, UiSwitch, UiDatePicker, UiInputNumber } from '../../shared/ui';
 import { convertUnixToDate } from '../../shared/utils';
 import i18n from '../../shared/lib/locale';
@@ -22,7 +23,7 @@ const MOCK_NAMES = [
 ];
 
 interface IRow {
-  id: number,
+  id: string,
   steName: string | null | undefined,
   isActual: boolean
   priceEndDate: string | null | undefined,
@@ -32,8 +33,8 @@ interface IRow {
   fillEndDate: string | null | undefined,
 }
 
-const MOCK_DATA: IRow[] = MOCK_NAMES.map((name, index) => ({
-  id: index,
+const MOCK_DATA: IRow[] = MOCK_NAMES.map((name) => ({
+  id: uuidv4(),
   steName: name,
   isActual: true,
   priceEndDate: null,
