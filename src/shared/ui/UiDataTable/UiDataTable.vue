@@ -8,6 +8,7 @@ const props = withDefaults(
     columns: any[],
     data: any[],
     pagination?: paginationType | false,
+    minHeight?: number
     maxHeight?: number
   }>(),
   {
@@ -18,6 +19,7 @@ const props = withDefaults(
         pageSize: 10
       }
     },
+    minHeight: 500,
     maxHeight: 500
   },
 );
@@ -28,6 +30,7 @@ const props = withDefaults(
     :columns="props.columns"
     :data="props.data"
     :pagination="props.pagination"
+    :min-height="props.maxHeight"
     :max-height="props.maxHeight"
   />
 </template>

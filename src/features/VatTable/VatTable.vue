@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { h, ref } from 'vue';
-import { UiDataTable, UiSwitch, UiDatePicker } from '../../shared/ui';
+import { computed, h, ref } from 'vue';
+import { UiDataTable, UiSwitch, UiDatePicker, UiInputNumber } from '../../shared/ui';
 import { convertUnixToDate } from '../../shared/utils';
 
 const MOCK_NAMES = [
@@ -18,20 +18,22 @@ const MOCK_NAMES = [
   'Рюкзак Staff Strike универсальный, 3 кармана, черно-салатовый, 45х27х12 см'
 ];
 
-const MOCK_DATA: {
-  key: number,
+interface IRow {
+  id: number,
   steName: string | null | undefined,
   isActual: boolean
   priceEndDate: string | null | undefined,
-  priceNotNds: string | null | undefined,
-  nds: string | null | undefined,
-  price: string | null | undefined,
+  priceNotNds: number | null | undefined,
+  nds: number | null | undefined,
+  price: number | null | undefined,
   fillEndDate: string | null | undefined,
-}[] = MOCK_NAMES.map((name, index) => ({
-  key: index,
+}
+
+const MOCK_DATA: IRow[] = MOCK_NAMES.map((name, index) => ({
+  id: index,
   steName: name,
   isActual: true,
-  priceEndDate: '14.11.2025',
+  priceEndDate: null,
   priceNotNds: null,
   nds: null,
   price: null,
@@ -41,20 +43,32 @@ const MOCK_DATA: {
 
 const data = ref(MOCK_DATA);
 
-const setDataToConsole = (row: any) => {
+const setDataToConsole = (row: IRow) => {
   console.log(row);
 }
 
-const COLUMNS = [
+const calculatedData = computed(() => data?.value?.map((row) => {
+  if (row.priceNotNds && row.nds) {
+    const price = Number(row.priceNotNds) + (Number(row.priceNotNds) * Number(row.nds) / 100);
+    return ({ ...row, price });
+  } else {
+    return row;
+  }
+}));
+
+const COLUMNS = computed(() => [
   {
     key: "steName",
     title: "Наименование СТЕ",
-    sorter: 'default',
+    width: 250,
+    sorter: 'default'
   },
   {
     key: "isActual",
     title: "В наличии",
-    render(row: any, index: number) {
+    width: 100,
+    align: "center",
+    render(row: IRow, index: number) {
       return h(UiSwitch, {
         isActive: row.isActual,
         onUpdateValue(v: any) {
@@ -64,14 +78,16 @@ const COLUMNS = [
           setDataToConsole(row);
         }
       })
-    }
+    },
   },
   {
     key: "priceEndDate",
     title: "Срок действия предоставленных сведений",
-    render(row: any, index: number) {
+    width: 150,
+    render(row: IRow, index: number) {
       return h(UiDatePicker, {
         value: row.priceEndDate,
+        bordered: false,
         onUpdateValue(v: any) {
           if (data?.value?.[index]?.hasOwnProperty('priceEndDate')) {
             data.value[index].priceEndDate = convertUnixToDate(v);
@@ -84,37 +100,64 @@ const COLUMNS = [
   {
     key: "priceNotNds",
     title: "Цена, руб. без НДС",
-  },
-  {
-    key: "nds",
-    title: "НДС, %",
-  },
-  {
-    key: "price",
-    title: "Цена, руб. с НДС",
-  },
-  {
-    key: "fillEndDate",
-    title: "Срок заполнения",
-    render(row: any, index: number) {
-      return h(UiDatePicker, {
-        value: row.fillEndDate,
+    width: 100,
+    render(row: IRow, index: number) {
+      return h(UiInputNumber, {
+        value: row.priceNotNds,
+        bordered: false,
         onUpdateValue(v: any) {
-          if (data?.value?.[index]?.hasOwnProperty('fillEndDate')) {
-            data.value[index].fillEndDate = convertUnixToDate(v);
+          if (data?.value?.[index]?.hasOwnProperty('priceNotNds')) {
+            data.value[index].priceNotNds  = v;
           }
           setDataToConsole(row);
         }
       })
     }
   },
-];
-
+  {
+    key: "nds",
+    title: "НДС, %",
+    width: 100,
+    render(row: IRow, index: number) {
+      return h(UiInputNumber, {
+        value: row.nds,
+        bordered: false,
+        onUpdateValue(v: any) {
+          if (data?.value?.[index]?.hasOwnProperty('nds')) {
+            data.value[index].nds = v;
+          }
+          setDataToConsole(row);
+        }
+      })
+    }
+  },
+  {
+    key: "price",
+    title: "Цена, руб. с НДС",
+    width: 130,
+    render(row: IRow) {
+      setDataToConsole(row);
+      return row.price;
+    }
+  },
+  {
+    key: "fillEndDate",
+    title: "Срок заполнения",
+    width: 130
+  },
+]);
 </script>
 
 <template>
   <UiDataTable
     :columns="COLUMNS"
-    :data="MOCK_DATA"
+    :data="calculatedData"
   />
 </template>
+
+<style scoped>
+:deep(.n-data-table-th__title) {
+  text-transform: uppercase;
+  text-align: center;
+}
+</style>

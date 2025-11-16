@@ -5,7 +5,13 @@ import { VatTable } from '../features';
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {
-    primaryColor: '#FF8C00'
+    primaryColor: '#5181e4'
+  },
+  DataTable: {
+    thColor: '#1f6ed58c',
+    thTextColor: '#ffffff',
+    thColorHover: '#0038a154',
+    thColorSorting: '#0038a154'
   }
 }
 </script>
