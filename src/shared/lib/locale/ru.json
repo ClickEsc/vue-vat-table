@@ -1,0 +1,15 @@
+{
+  "common": {
+    "productItemNaming": "Наименование СТЕ",
+    "inStock": "В наличии",
+    "providedInformationPeriodOfValidity": "Срок действия предоставленных сведений",
+    "priceRubExVat": "Цена,\u00A0руб. без\u00A0НДС",
+    "vatInPercent": "НДС, %",
+    "priceRubIncVat": "Цена,\u00A0руб. с\u00A0НДС",
+    "periodOfFilling": "Срок заполнения"
+  },
+  "fields": {
+    "chooseDate": "Выберите дату",
+    "insertValue": "Введите значение"
+  }
+}

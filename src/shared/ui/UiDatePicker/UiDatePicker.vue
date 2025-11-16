@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue';
 import { convertDateToUnix, defaultDateFormat } from '../../utils';
+import i18n from '../../lib/locale';
+
+const t = i18n.global.t;
 
 const props = withDefaults(
   defineProps<{
@@ -16,8 +19,10 @@ const props = withDefaults(
 );
 
 const date = ref(null as string | number | null);
-const isDisabled = ref(false);
-const format = ref(defaultDateFormat);
+
+const setDate = (val: number) => {
+  date.value = val;
+}
 
 watch(
   () => props.value,
@@ -25,7 +30,7 @@ watch(
     if (newVal !== oldVal) {
       let newDate = newVal;
       if (newVal) {
-        const unixDate = convertDateToUnix(newVal as string, format.value) as number | string;
+        const unixDate = convertDateToUnix(newVal as string) as number | string;
 
         if (unixDate !== 'Invalid date') {
           newDate = unixDate;
@@ -39,30 +44,9 @@ watch(
   },
 );
 
-watch(
-  () => props.isDisabled,
-  (newVal, oldVal) => {
-    if (newVal !== oldVal) {
-      isDisabled.value = props.isDisabled;
-    }
-  },
-);
-
-watch(
-  () => props.format,
-  (newVal, oldVal) => {
-    if (newVal !== oldVal) {
-      format.value = props.format;
-    }
-  },
-);
-
 onMounted(() => {
   if (props.value) {
     date.value = convertDateToUnix(props.value as string) as string | number;
-  }
-  if (props.isDisabled) {
-    isDisabled.value = props.isDisabled;
   }
 })
 </script>
@@ -70,8 +54,17 @@ onMounted(() => {
 <template>
   <n-date-picker
     v-model:value="date"
-    :disabled="isDisabled"
-    :format="format"
+    :disabled="props.isDisabled"
+    :format="props.format"
     clearable
+    :placeholder="t('fields.chooseDate')"
+    @update:value="setDate"
   />
 </template>
+
+<style scoped>
+:deep(.n-input__placeholder) {
+  font-size: 10.5px;
+  font-style: italic;
+}
+</style>

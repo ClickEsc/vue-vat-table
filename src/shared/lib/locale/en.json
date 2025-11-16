@@ -1,0 +1,15 @@
+{
+  "common": {
+    "productItemNaming": "Product item naming",
+    "inStock": "In stock",
+    "providedInformationPeriodOfValidity": "Provided information period of validity",
+    "priceRubExVat": "Price, rub. ex VAT",
+    "vatInPercent": "VAT, %",
+    "priceRubIncVat": "Price, rub. inc VAT",
+    "periodOfFilling": "Period of filling"
+  },
+  "fields": {
+    "chooseDate": "Choose date",
+    "insertValue": "Insert value"
+  }
+}

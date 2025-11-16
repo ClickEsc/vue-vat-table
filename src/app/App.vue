@@ -11,7 +11,8 @@ const themeOverrides: GlobalThemeOverrides = {
     thColor: '#1f6ed58c',
     thTextColor: '#ffffff',
     thColorHover: '#0038a154',
-    thColorSorting: '#0038a154'
+    thColorSorting: '#0038a154',
+    borderColor: '#c9ccd975'
   }
 }
 </script>

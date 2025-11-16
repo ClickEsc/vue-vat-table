@@ -2,6 +2,9 @@
 import { computed, h, ref } from 'vue';
 import { UiDataTable, UiSwitch, UiDatePicker, UiInputNumber } from '../../shared/ui';
 import { convertUnixToDate } from '../../shared/utils';
+import i18n from '../../shared/lib/locale';
+
+const t = i18n.global.t;
 
 const MOCK_NAMES = [
   'Корректор канцелярский / корректор ленточный, 5 мм*30 м, Комплект 5 шт.',
@@ -59,14 +62,14 @@ const calculatedData = computed(() => data?.value?.map((row) => {
 const COLUMNS = computed(() => [
   {
     key: "steName",
-    title: "Наименование СТЕ",
+    title: t('common.productItemNaming'),
     width: 250,
     sorter: 'default'
   },
   {
     key: "isActual",
-    title: "В наличии",
-    width: 100,
+    title: t('common.inStock'),
+    width: 110,
     align: "center",
     render(row: IRow, index: number) {
       return h(UiSwitch, {
@@ -82,8 +85,8 @@ const COLUMNS = computed(() => [
   },
   {
     key: "priceEndDate",
-    title: "Срок действия предоставленных сведений",
-    width: 150,
+    title: t('common.providedInformationPeriodOfValidity'),
+    width: 170,
     render(row: IRow, index: number) {
       return h(UiDatePicker, {
         value: row.priceEndDate,
@@ -99,8 +102,8 @@ const COLUMNS = computed(() => [
   },
   {
     key: "priceNotNds",
-    title: "Цена, руб. без НДС",
-    width: 100,
+    title: t('common.priceRubExVat'),
+    width: 155,
     render(row: IRow, index: number) {
       return h(UiInputNumber, {
         value: row.priceNotNds,
@@ -116,8 +119,8 @@ const COLUMNS = computed(() => [
   },
   {
     key: "nds",
-    title: "НДС, %",
-    width: 100,
+    title: t('common.vatInPercent'),
+    width: 155,
     render(row: IRow, index: number) {
       return h(UiInputNumber, {
         value: row.nds,
@@ -133,8 +136,8 @@ const COLUMNS = computed(() => [
   },
   {
     key: "price",
-    title: "Цена, руб. с НДС",
-    width: 130,
+    title: t('common.priceRubIncVat'),
+    width: 165,
     render(row: IRow) {
       setDataToConsole(row);
       return row.price;
@@ -142,7 +145,7 @@ const COLUMNS = computed(() => [
   },
   {
     key: "fillEndDate",
-    title: "Срок заполнения",
+    title: t('common.periodOfFilling'),
     width: 130
   },
 ]);
@@ -152,6 +155,8 @@ const COLUMNS = computed(() => [
   <UiDataTable
     :columns="COLUMNS"
     :data="calculatedData"
+    :bordered="false"
+    :single-line="false"
   />
 </template>
 
